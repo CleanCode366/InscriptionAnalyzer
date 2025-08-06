@@ -1,11 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Run linting before commit
-npm run lint
-
-# Prevent commit if lint fails
-if [ $? -ne 0 ]; then
-    echo "Linting failed. Commit aborted."
-    exit 1
-fi
+pnpm lint
+pnpm format:check

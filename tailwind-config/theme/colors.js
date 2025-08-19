@@ -1,41 +1,48 @@
 export default {
-  primary: {
-    DEFAULT: '#435334', // Primary green
-    dark: '#39462C', // Darker primary
-    light: '#9EB384', // Lighter primary
-    pale: '#CEDEBD', // Pale green
-  },
-  secondary: {
-    DEFAULT: '#ffffff', // White
-    dark: '#2D2D2D', // Dark gray
-    light: '#D9D9D9', // Light gray
-    text: {
-      DEFAULT: '#25293F', // Text gray
-      dark: '#1B2559', // Darker text
-    },
-  },
-  warning: {
-    light: '#FFEED6', // Light warning
-    DEFAULT: '#F69727', // Warning orange
-    dark: '#D6BC97', // Darker accent
-  },
-  notification: {
-    light: '#FAF1E4', // Notification background
-    DEFAULT: '#FFEED6', // Notification border
-  },
-  error: {
-    DEFAULT: '#E53E3E', // Standard red for errors
-    dark: '#9B2C2C', // Dark error red
-    light: '#FED7D7', // Light error red
-  },
-  success: {
-    DEFAULT: '#38A169', // Standard green for success
-    dark: '#276749', // Dark success green
-    light: '#C6F6D5', // Light success green
-  },
-  info: {
-    DEFAULT: '#3182CE', // Standard blue for information
-    dark: '#2A4365', // Dark info blue
-    light: '#BEE3F8', // Light info blue
-  },
+  hello: '#E27E03',
+  // primary: {
+  //   DEFAULT: '#E27E03',   // → bg-primary
+  //   dark: '#cc6e03',      // → bg-primary-dark
+  //   light: '#f08d1a',     // → bg-primary-light
+  //   text: '#FFFFFF',      // → text-primary-text
+  //   'text-dark': '#000000', // → text-primary-text-dark
+  //   background: '#161616',  // → bg-primary-background
+  //   'background-dark': '#0d0d0d', // → bg-primary-background-dark
+  //   'background-light': '#1f1f1f', // → bg-primary-background-light
+  // },
+  // secondary: {
+  //   DEFAULT: '#323232',
+  //   dark: '#222222',
+  //   light: '#4a4a4a',
+  //   text: '#B0B0B0',
+  //   'text-dark': '#8d8d8d',
+  //   background: '#323232',
+  //   'background-dark': '#1f1f1f',
+  //   'background-light': '#4a4a4a'
+  // },
+
+  // warning: {
+  //   light: '#FFEED6',
+  //   DEFAULT: '#F69727',
+  //   dark: '#D6BC97',
+  // },
+  // notification: {
+  //   light: '#FAF1E4',
+  //   DEFAULT: '#FFEED6',
+  // },
+  // error: {
+  //   DEFAULT: '#E53E3E',
+  //   dark: '#9B2C2C',
+  //   light: '#FED7D7',
+  // },
+  // success: {
+  //   DEFAULT: '#38A169',
+  //   dark: '#276749',
+  //   light: '#C6F6D5',
+  // },
+  // info: {
+  //   DEFAULT: '#3182CE',
+  //   dark: '#2A4365',
+  //   light: '#BEE3F8',
+  // },
 };

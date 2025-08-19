@@ -1,3 +1,33 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  /* Primary colors */
+  --color-primary: #E27E03;
+  --color-primary-dark: #C16C03;
+  --color-primary-dark: #cc6e03;
+  --color-primary-light: #f08d1a;
+  --color-primary-text: #FFFFFF;
+  --color-primary-text-dark: #000000;
+  --color-primary-background: #161616;
+  --color-primary-background-dark: #0d0d0d;
+  --color-primary-background-light: #1f1f1f;
+
+  /* Secondary colors */
+  --color-secondary: #323232;
+  --color-secondary-dark: #222222;
+  --color-secondary-light: #4a4a4a;
+  --color-secondary-text: #B0B0B0;
+  --color-secondary-text-dark: #8d8d8d;
+  --color-secondary-background: #323232;
+  --color-secondary-background-dark: #1f1f1f;
+  --color-secondary-background-light: #4a4a4a;
+}
+
+/* Hide scrollbars globally */
+* {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+*::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}

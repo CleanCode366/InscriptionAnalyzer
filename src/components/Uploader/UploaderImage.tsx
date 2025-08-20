@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
 import type { ChangeEvent } from "react";
+import React, { useRef, useState } from "react";
 
 const UploaderImage: React.FC = () => {
   const [photo, setPhoto] = useState<string | null>(null);
@@ -145,7 +145,7 @@ const UploaderImage: React.FC = () => {
         ? dataView.getUint16(gpsOffset, true)
         : dataView.getUint16(gpsOffset, false);
       
-      let lat = null, lon = null, latRef = null, lonRef = null;
+      let latRef = null, lonRef = null;
       let currentOffset = gpsOffset + 2;
       
       for (let i = 0; i < gpsEntries; i++) {
@@ -234,7 +234,7 @@ const UploaderImage: React.FC = () => {
                   setPhoto(photoDataUrl);
                   stopCamera();
                 },
-                (geoError) => {
+                () => {
                   setError("Location access denied. Please enable location services and try again.");
                   setHasGeoData(false);
                 }

@@ -2,6 +2,9 @@
 ARG NODE_VERSION=22.13.1
 FROM node:${NODE_VERSION}-alpine AS base
 
+# Install pnpm
+RUN npm install -g pnpm@9
+
 WORKDIR /app
 
 # Build
@@ -9,9 +12,9 @@ FROM base AS build
 
 COPY . .
 
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
-RUN npm run build
+RUN pnpm run build
 
 # Production
 FROM base AS final

@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react';
+import { type CSSProperties } from 'react';
 import RiseLoader from 'react-spinners/RiseLoader';
 
 const override: CSSProperties = {

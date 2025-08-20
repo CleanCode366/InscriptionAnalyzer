@@ -1,23 +1,24 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
 import tailwindcss from '@tailwindcss/vite';
-import path from 'path'
+import react from '@vitejs/plugin-react-swc';
+import path from 'path';
+import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-  // base: '/',
-  // preview: {
-  //   port: 3000,
-  //   strictPort: true,
-  // },
-  // server: {
-  //   host: true,
-  //   port: 3000,
-  //   origin: 'http://0.0.0.0:3000',
-  //   strictPort: true,
-  // },
+  base: '/',
+  preview: {
+    port: 3000,
+    strictPort: true,
+  },
   server: {
-    allowedHosts: ["a44e7b19701e.ngrok-free.app"]
+    host: true,
+    port: 3000,
+    origin: 'http://0.0.0.0:3000',
+    strictPort: true,
+    allowedHosts: [
+      "fccd5be1b946.ngrok-free.app",
+      "d1f6d6cc6042.ngrok-free.app",
+      "a44e7b19701e.ngrok-free.app"]
   },
   plugins: [
     react(),

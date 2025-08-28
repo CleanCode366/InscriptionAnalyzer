@@ -8,9 +8,11 @@ interface NavItem {
 }
 
 const links: NavItem[] = [
-  { path: "/home", label: "Home", end: true },
-  { path: "/photos", label: "Photos" },
-  { path: "/login", label: "Login" },
+  { path: "/feed", label: "Feed", end: true },
+  { path: "/upload", label: "Upload", end: true },
+  { path: "/photos", label: "Photos", end: true },
+  { path: "/login", label: "Login", end: true },
+  { path: "/profile", label: "profile", end: true },
 ];
 
 const Navbar: React.FC = () => {
@@ -43,3 +45,77 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+
+
+// User: 
+// _id: uuid(PK)
+// Name: string
+// profileImage: string
+// ImagesUploaded: number
+// UpvotesRecived: number
+// Followers: number
+// Points: number
+
+// Post:
+// _id: uuid (PK)
+// user_id: uuid (Ref: User FK)
+// createdAt: Date
+// updatedAt: Date
+// Images:
+// thumbnaiImage: string[ ] max: 5
+// Image: string[ ] max: 5
+// Description: {
+//   Author: String
+//   _id: UUID
+//   Upvote: number
+//   Description: 
+//   scriptLanguage: enum[]
+//   Language: enum[i18n]
+//   englishTranslation: string
+//   Description :String
+//   geolocation: {
+//     lon: number
+//     lat: number
+//     state: string
+//     city: string
+//     region: string
+//   }
+//   createdAt: Date
+//   updatedAt: Date
+//   Subject: string
+//   Title: string
+// }
+// Topic: string
+// Script: enum[]
+// Type: enum[ stone, coper plate, cloth ]
+
+
+
+// Comments:
+// _id: uuid
+// post_id: post_id(FK)
+// bucketID: created date
+// description: {
+//   Author: String
+//   _id: UUID
+//   Upvote: number
+//   Description: 
+//   scriptLanguage: enum[]
+//   Language: enum[i18n]
+//   englishTranslation: string
+//   Description :String
+//   geolocation: {
+//     lon: number
+//     lat: number
+//     state: string
+//     city: string
+//     region: string
+//   }
+//   createdAt: Date
+//   updatedAt: Date
+//   Subject: string
+//   Title: string
+// }
+// createsAt: Date
+// updatedAt: Date
+

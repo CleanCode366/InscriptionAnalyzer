@@ -1,7 +1,7 @@
+import InscriptionDetails from "@/views/InscriptionDetailPage.tsx/InscriptionDetails";
 import Upload from "@/views/Upload/Upload";
 import BaseLayout from "@layouts/MainLayout/BaseLayout";
 import AuthPage from "@views/Auth/AuthPage";
-import DetailInscriptionPage from "@views/DetailInscriptionPage/DetailInscriptionPage";
 import Feed from "@views/Feed/Feed";
 import Gallery from "@views/Gallery/Gallery";
 import Profile from "@views/Profile/Profile";
@@ -26,7 +26,7 @@ const MainRoutes = {
     },
     {
       path: 'Feed/:id',
-      element: <DetailInscriptionPage/>
+      element: <InscriptionDetails/>
     },
     {
       path: 'settings',

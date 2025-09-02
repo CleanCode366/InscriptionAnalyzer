@@ -100,7 +100,7 @@ const mockDiscoveryPosts = [
     rating: 3.5
   },
   {
-    _id: "post1",
+    _id: "post4",
     user_id: "user123",
     createdAt: new Date('2024-01-15'),
     images: {
@@ -132,7 +132,7 @@ const mockDiscoveryPosts = [
     rating: 4.5
   },
   {
-    _id: "post2",
+    _id: "post5",
     user_id: "user124", 
     createdAt: new Date('2024-01-12'),
     images: {
@@ -164,7 +164,7 @@ const mockDiscoveryPosts = [
     rating: 4.0
   },
   {
-    _id: "post3",
+    _id: "post6",
     user_id: "user125",
     createdAt: new Date('2024-01-10'),
     images: {

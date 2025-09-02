@@ -3,6 +3,7 @@ import type React from "react";
 import { useState } from "react";
 import StarRating from "./StarRating";
 import { Heart, MapPin } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 interface DiscoveryCardProps {
   post: Post;
@@ -59,9 +60,9 @@ const DiscoveryCard: React.FC<DiscoveryCardProps> = ({ post, layout = "grid" }) 
                 <span>{post.description.geolocation.city}, {post.description.geolocation.state}</span>
               </div>
               
-              <button className="text-orange-500 hover:text-orange-400 text-sm font-medium cursor-pointer">
+              <NavLink to={post._id} className="text-orange-500 hover:text-orange-400 text-sm font-medium cursor-pointer">
                 View details
-              </button>
+              </NavLink>
             </div>
           </div>
         </div>
@@ -111,9 +112,9 @@ const DiscoveryCard: React.FC<DiscoveryCardProps> = ({ post, layout = "grid" }) 
             {post.description.upvote}
           </button>
           
-          <button className="text-orange-500 hover:text-orange-400 text-sm font-medium cursor-pointer">
+          <NavLink to={post._id} className="text-orange-500 hover:text-orange-400 text-sm font-medium cursor-pointer">
             View details
-          </button>
+          </NavLink>
         </div>
       </div>
     </div>

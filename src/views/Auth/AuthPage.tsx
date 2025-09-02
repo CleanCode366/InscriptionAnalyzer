@@ -24,8 +24,7 @@ const AuthPage: React.FC = () => {
         <p className="text-gray-600 mb-6">
           Sign in or create an account with Google
         </p>
-
-        <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+        <GoogleOAuthProvider clientId="962264895991-93et5a8stepe4osg77oj9gh0am4cc897.apps.googleusercontent.com">
           <GoogleLogin
             onSuccess={handleLoginSuccess}
             onError={handleLoginFailure}

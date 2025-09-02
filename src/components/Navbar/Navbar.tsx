@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="flex flex-row justify-between bg-secondary-background p-4 text-primary-text px-16">
       <div>
-        <NavLink to="/home" end className="text-xl font-bold">
+        <NavLink to="/feed" end className="text-xl font-bold">
           Stone Inscriptions
         </NavLink>
       </div>

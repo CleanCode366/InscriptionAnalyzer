@@ -42,7 +42,7 @@ export interface Post {
   user_id: string;
   createdAt: Date;
   images: {
-    thumbnailImage: string[];
+    thumbnailImage: string;
     image: string[];
   };
   description: PostDescription;

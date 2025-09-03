@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import type { ChangeEvent } from "react";
 import { Camera, MapPin, Upload, X } from "lucide-react";
+// import { getTokenFromCookie } from "@/utils/cookieUtils";
 
 // Types
 interface GeoInfo {
@@ -46,7 +47,7 @@ interface PostSchema {
   type?: string;
 }
 
-const test_token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsImV4cCI6MTc1Njk4MDM5OCwidXNlciI6Im5heWFuY29kaW5nQGdtYWlsLmNvbSIsImlhdCI6MTc1Njg5Mzk5OH0.w5bjBH_pKXYjlTkZYm5EQqOMmrXu4OwoFupoOGkmY1E"
+// const test_token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsImV4cCI6MTc1Njk4ODY0MywidXNlciI6Im5heWFuY29kaW5nQGdtYWlsLmNvbSIsImlhdCI6MTc1NjkwMjI0M30.F207bcrhJ_CcaWDtfm3dp0SannIp2izKyRwIQ7p_rJc"
 
 // Utility functions
 const startCameraStream = async (): Promise<MediaStream> => {
@@ -257,6 +258,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
       const formData = new FormData();
       formData.append("file", blob, "inscription.jpg");
 
+      return true;
       const response = await fetch("http://10.182.6.144:8000/predict", {
         method: "POST",
         body: formData,
@@ -397,11 +399,22 @@ const EnhancedInscriptionUploader: React.FC = () => {
         }
       };
 
+      function getCookie(name: String) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+      }
+
+      const getTokenFromCookie = () => {
+        const token = getCookie("token");
+        return token || 'hello';
+      };
+
       const form = new FormData();
       form.append("files", blob, "inscription.jpg");
       form.append("post", new Blob([JSON.stringify(postData)],{type: "application/json"}) );
       console.log(form.get("post"));
-
+      const test_token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsImV4cCI6MTc1NzAwNDc0NiwidXNlciI6Im5heWFuY29kaW5nQGdtYWlsLmNvbSIsImlhdCI6MTc1NjkxODM0Nn0.aBhbcTsImprO_qsI-B8eLZu35ETml6GYZ4pdLLCQpSo';
       const response = await fetch("http://localhost:8080/post/addPostWithFile", {
         method: "POST",
         headers: {

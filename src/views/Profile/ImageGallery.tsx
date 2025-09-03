@@ -27,7 +27,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ posts }) => {
           <div key={post._id} className="relative group cursor-pointer">
             <div className="aspect-square bg-secondary-background rounded-lg overflow-hidden">
               <img 
-                src={post.images.thumbnailImage[0]} 
+                src={post.images.image[0]} 
                 alt={post.description.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
               />

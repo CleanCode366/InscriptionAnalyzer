@@ -10,7 +10,7 @@ interface NavItem {
 const links: NavItem[] = [
   { path: "/feed", label: "Feed", end: true },
   { path: "/upload", label: "Upload", end: true },
-  { path: "/photos", label: "Photos", end: true },
+  // { path: "/photos", label: "Photos", end: true },
   { path: "/login", label: "Login", end: true },
   { path: "/profile", label: "profile", end: true },
 ];

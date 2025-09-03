@@ -1,24 +1,73 @@
 import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import mockDiscoveryPosts from '@/Db/feeds';
 import FilterBar from './FilterBar';
 import DiscoveryCard from './DiscoveryCard';
-
-
+// import { getTokenFromCookie } from '@/utils/cookieUtils';
 
 // Main Discovery Feed Component
 const Feed = () => {
   const [layout, setLayout] = useState('grid');
   const [searchTerm, setSearchTerm] = useState('');
-  const [posts, setPosts] = useState(mockDiscoveryPosts);
+  type Post = {
+    _id: string;
+    description: {
+      title: string;
+      subject: string;
+      geolocation: {
+        city: string;
+        [key: string]: any;
+      };
+      [key: string]: any;
+    };
+    script: string[];
+    [key: string]: any;
+  };
+  
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  
+  // Fetch posts from API
+  useEffect(() => {
+    function getCookie(name: String) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+    const getTokenFromCookie = () => {
+      const token = getCookie("token");
+      return token || 'hello';
+    };
+    const fetchPosts = async () => {
+      try {
+        const token = getTokenFromCookie();
+        console.log("Token in Feed:", token);
+        const response = await fetch('http://localhost:8080/post/getAllPost', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsImV4cCI6MTc1NzAwNDc0NiwidXNlciI6Im5heWFuY29kaW5nQGdtYWlsLmNvbSIsImlhdCI6MTc1NjkxODM0Nn0.aBhbcTsImprO_qsI-B8eLZu35ETml6GYZ4pdLLCQpSo`,
+          },
+          body: JSON.stringify({}),
+        });
+        const data = await response.json();
+        setPosts(Array.isArray(data.data) ? data.data : []);
+      } catch (error) {
+        console.error('Failed to fetch posts:', error);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   // Filter posts based on search term
   const filteredPosts = posts.filter(post => 
-    post.description.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.description.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.description.geolocation.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.script.some(script => script.toLowerCase().includes(searchTerm.toLowerCase()))
+    // post?.description?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    // post?.description?.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    // post?.description?.geolocation?.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    Array.isArray(post?.script) && post.script.some(script => script?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  console.log("Filtered Posts:", filteredPosts);
 
   // Responsive layout adjustment
   useEffect(() => {
@@ -63,13 +112,15 @@ const Feed = () => {
             ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
             : "space-y-4"
         }>
-          {filteredPosts.map((post) => (
+          {posts.map((post) => (
             <DiscoveryCard 
               key={post._id} 
               post={post} 
               layout={layout}
             />
-          ))}
+          ))
+          
+          }
         </div>
 
         {/* Empty State */}

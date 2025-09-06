@@ -215,6 +215,15 @@ const EnhancedInscriptionUploader: React.FC = () => {
     type: "Stone"
   });
 
+  function getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop()?.split(';').shift() || null;
+    }
+    return null;
+  }
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -259,7 +268,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
       formData.append("file", blob, "inscription.jpg");
 
       return true;
-      const response = await fetch("http://10.182.6.144:8000/predict", {
+      const response = await fetch("http://10.182.0.37/stone_inscriptions_ai/predict/", {
         method: "POST",
         body: formData,
       });
@@ -342,7 +351,8 @@ const EnhancedInscriptionUploader: React.FC = () => {
       };
       reader.readAsDataURL(file);
     } catch (err) {
-      setError("Failed to read image metadata. Please try again.");
+      console.log(err);
+      setError("Failed to read the uploaded file.");
     }
   };
 
@@ -405,30 +415,39 @@ const EnhancedInscriptionUploader: React.FC = () => {
         if (parts.length === 2) return parts.pop().split(";").shift();
       }
 
-      const getTokenFromCookie = () => {
-        const token = getCookie("token");
-        return token || 'hello';
-      };
+      const token = getCookie("token");
 
       const form = new FormData();
       form.append("files", blob, "inscription.jpg");
       form.append("post", new Blob([JSON.stringify(postData)],{type: "application/json"}) );
-      console.log(form.get("post"));
-      const test_token = 'eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsImV4cCI6MTc1NzAwNDc0NiwidXNlciI6Im5heWFuY29kaW5nQGdtYWlsLmNvbSIsImlhdCI6MTc1NjkxODM0Nn0.aBhbcTsImprO_qsI-B8eLZu35ETml6GYZ4pdLLCQpSo';
       const response = await fetch("http://localhost:8080/post/addPostWithFile", {
         method: "POST",
         headers: {
           contentType: "multipart/form-data",
-          Authorization: `Bearer ${test_token}`
+          Authorization: `Bearer ${token}`
         },
         body: form
       });
 
-      if (!response.ok) throw new Error("Upload failed");
+      if (!response.ok) {
+        const errorText = await response.text(); // or response.json() if backend returns JSON
+        throw new Error(`${response.status} - ${errorText}`);
+      }
+
       alert("Inscription uploaded successfully!");
       resetForm();
     } catch (error) {
-      setError("Failed to upload inscription. Please try again.");
+      if (error instanceof Error) {
+        console.error("Backend error:", error.message);
+
+        if (error.message.includes("409")) {
+          setError("Upload failed: Conflicting image detected.");
+        } else {
+          setError("Upload failed: " + error.message);
+        }
+      } else {
+        setError("An unknown error occurred during upload.");
+      }
     } finally {
       setIsUploading(false);
     }

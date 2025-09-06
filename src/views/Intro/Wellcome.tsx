@@ -24,7 +24,7 @@ export default function Wellcome() {
       />
       <h1 className="text-2xl font-bold mb-2">C-DAC Crowdsourcing</h1>
       <p className="text-gray-300 mb-6">
-        Discover, document, and share historical inscriptions from around the
+        Discover, and archive historical inscriptions from around the
         world. Join our community of history enthusiasts and help preserve
         cultural heritage by documenting inscriptions wherever you find them.
       </p>
@@ -99,7 +99,7 @@ export default function Wellcome() {
       />
       <h1 className="text-2xl font-bold mb-2">C-DAC Crowdsourcing</h1>
       <p className="text-gray-300 mb-6">
-        Discover, document, and share historical inscriptions from around India.
+        Discover, and archive historical inscriptions from around world.
         Join our community of history enthusiasts and help preserve Indian
         cultural heritage by documenting inscriptions wherever you find them.
       </p>

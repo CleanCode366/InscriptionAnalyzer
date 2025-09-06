@@ -1,5 +1,5 @@
 import type React from "react";
-import StarRating from "../Feed/StarRating";
+import StarRating from "./StarRating";
 import { useState } from "react";
 
 interface RatingModalProps {
@@ -27,7 +27,9 @@ const RatingModal: React.FC<RatingModalProps> = ({ isOpen, onClose, currentRatin
         <div className="flex justify-center mb-6">
           <StarRating
             rating={rating} 
-            size="w-8 h-8" 
+            size="w-8 h-8"
+            interactive={true} 
+            onRate={setRating}
           />
         </div>
         <div className="flex gap-3">

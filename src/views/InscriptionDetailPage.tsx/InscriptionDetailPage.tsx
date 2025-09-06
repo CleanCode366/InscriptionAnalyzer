@@ -3,7 +3,8 @@ import { ThumbsUp, MapPin, Calendar, Languages, BookOpen, Share2, Heart, Plus } 
 import StarRating from './StarRating';
 import CommentCard from './CommentCard';
 import RatingModal from './RatingModal';
-import { mockPostData, mockComments } from '@/Db/DetailedPost';
+import { useParams } from 'react-router-dom';
+import Model from './Model';
 
 
 
@@ -12,13 +13,15 @@ interface InscriptionDetailsPageProp {
 }
 export interface Comment {
     _id: string;
-    user_id: string;
-    user_name: string;
-    description: {
-        description: string;
-        upvote: number;
-        createdAt: Date;
-    }
+    postId: string;
+    userId: string;
+    username: string;
+    userImageUrl?: string;
+    createdAt: Date;
+    updatedAt: Date;
+    description: string;
+    upvote: number;
+    userVote: string[];
 }
 
 interface Post {
@@ -37,12 +40,12 @@ interface Post {
         language: string[];
         englishTranslation: string;
         upvote: number;
-        geolocation: {
+        geolocation?: {
             lon: number;
-            lat: number;
-            state: string;
-            city: string;
-            region: string;
+            lat?: number;
+            state?: string;
+            city?: string;
+            region?: string;
         };
         createdAt: Date;
         updatedAt: Date;
@@ -53,7 +56,7 @@ interface Post {
     rating: number;
 }
 // Main Inscription Details Component
-const InscriptionDetailsPage: React.FC<InscriptionDetailsPageProp> = ({ postId }) => {
+const InscriptionDetailsPage: React.FC = () => {
     // Mock data based on your structure
 
 
@@ -63,26 +66,101 @@ const InscriptionDetailsPage: React.FC<InscriptionDetailsPageProp> = ({ postId }
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [userRating, setUserRating] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [display, setDisplay] = useState(false);
 
-  // Simulate API call
-  useEffect(() => {
-    const fetchPostDetails = async () => {
-      try {
-        setLoading(true);
-        // Simulate API call: localhost:8000/feed/${postId}
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        setPost(mockPostData);
-        setComments(mockComments);
-      } catch (error) {
-        console.error('Error fetching post details:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleOpen = () => setDisplay(true);
+  const handleClose = () => setDisplay(false);
 
-    fetchPostDetails();
-  }, [postId]);
+  function getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop()?.split(';').shift() || null;
+    }
+    return null;
+  }
+   
+
+// inside your component
+const { id: postId } = useParams<{ id: string }>();
+
+useEffect(() => {
+  const fetchPostDetails = async () => {
+    if (!postId) {
+      console.error("No postId found in route params");
+      setPost(null);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const token = getCookie('token');
+      const response = await fetch('http://localhost:8080/post/getAllPost', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({}),
+      });
+
+      const data = await response.json();
+
+      const allPosts = Array.isArray(data.data) ? data.data : [];
+      const matchedPost =
+        allPosts.find((p: Post) => String(p._id) === String(postId)) || null;
+
+      console.log("Route param postId:", postId);
+      console.log("Available IDs:", allPosts.map((p: Post) => p._id));
+      console.log("Matched Post:", matchedPost);
+
+      setPost(matchedPost);
+    } catch (error) {
+      console.error('Failed to fetch posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchComments = async () => {
+    if (!postId) {
+      console.error("No postId found in route params");
+      setComments([]);
+      return;
+    }
+    try {
+      setLoading(true);
+      const token = getCookie('token');
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+      myHeaders.append("Authorization", `Bearer ${token}`);
+
+      const urlencoded = new URLSearchParams();
+      urlencoded.append("postId", postId);
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: "follow"
+      };
+
+      const response = await fetch("http://localhost:8080/post/getPostDiscription", requestOptions)
+
+      const data = await response.json();
+      const fetchedComments = Array.isArray(data.data) ? data.data : [];
+      setComments(fetchedComments);
+    } catch (error) {
+      console.error('Failed to fetch comments:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchComments();
+  fetchPostDetails();
+}, [postId]); // ✅ now it listens to route changes
+
 
   const handleRating = (newRating: number) => {
     setUserRating(newRating);
@@ -90,10 +168,6 @@ const InscriptionDetailsPage: React.FC<InscriptionDetailsPageProp> = ({ postId }
     console.log('Rating submitted:', newRating);
   };
 
-  const handleAddDescription = () => {
-    // Navigate to add description page or open modal
-    console.log('Add description clicked');
-  };
 
   if (loading) {
     return (
@@ -113,6 +187,7 @@ const InscriptionDetailsPage: React.FC<InscriptionDetailsPageProp> = ({ postId }
 
   return (
     <div className="min-h-screen bg-primary-background">
+      <Model postId={postId as string} display={display} onClose={handleClose} />
       <div className="max-w-4xl mx-auto p-4">
         {/* Main Image */}
         <div className="mb-6">
@@ -126,19 +201,19 @@ const InscriptionDetailsPage: React.FC<InscriptionDetailsPageProp> = ({ postId }
         {/* Title and Location */}
         <div className="mb-6">
           <h2 className="text-white text-2xl md:text-3xl font-bold mb-2">
-            {post.description.title}
+            {post.description.title || 'Untitled Inscription'}
           </h2>
           <div className="flex items-center gap-2 text-gray-300 mb-4">
             <MapPin className="w-5 h-5" />
-            <span>Archaeological Museum of {post.description.geolocation.city}, {post.description.geolocation.state}</span>
+            <span>{post.description.geolocation && post.description.geolocation.city}, {post.description.geolocation && post.description.geolocation.state || ''}</span>
           </div>
         </div>
 
         {/* Rating and Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <StarRating rating={post.rating} />
-            <span className="text-gray-300">({post.rating})</span>
+            <StarRating rating={post.rating || 0} />
+            <span className="text-gray-300">({post.rating || 0})</span>
           </div>
           <div className="flex gap-3">
             <button
@@ -171,25 +246,25 @@ const InscriptionDetailsPage: React.FC<InscriptionDetailsPageProp> = ({ postId }
               <div className="flex-1">
                 <h4 className="text-yellow-400 font-semibold text-lg mb-2">{post.user_name}</h4>
                 <p className="text-gray-300 text-base leading-relaxed mb-4">
-                  {post.description.description}
+                  {post.description.description || 'No description provided.'}
                 </p>
                 
                 {/* Metadata */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                   <div className="flex items-center gap-2 text-gray-400">
                     <Languages className="w-4 h-4" />
-                    <span>Script: {post.script.join(', ')}</span>
+                    <span>Script: {post.script && post.script.join(', ')}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-400">
                     <BookOpen className="w-4 h-4" />
-                    <span>Language: {post.description.language.join(', ')}</span>
+                    <span>Language: {post.description.language && post.description.language.join(', ')}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-400">
                     <Calendar className="w-4 h-4" />
-                    <span>Type: {post.type}</span>
+                    <span>Type: {post.type && post.type}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-400">
-                    <span>Topic: {post.topic}</span>
+                    <span>Topic: {post.topic && post.type}</span>
                   </div>
                 </div>
 
@@ -203,7 +278,7 @@ const InscriptionDetailsPage: React.FC<InscriptionDetailsPageProp> = ({ postId }
               </div>
               <div className="ml-4 flex items-center gap-1 text-blue-400">
                 <ThumbsUp className="w-4 h-4 fill-current" />
-                <span className="font-medium">{post.description.upvote}</span>
+                <span className="font-medium">{post.description.upvote || 0}</span>
               </div>
             </div>
           </div>
@@ -218,12 +293,14 @@ const InscriptionDetailsPage: React.FC<InscriptionDetailsPageProp> = ({ postId }
             ))}
           </div>
         </div>
+        
+
 
         {/* Add Description Button */}
         <div className="text-center">
           <button
-            onClick={handleAddDescription}
-            className="w-full sm:w-auto px-8 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium flex items-center justify-center gap-2"
+            onClick={handleOpen}
+            className="w-full sm:w-auto px-8 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium flex items-center justify-center gap-2 cursor-pointer"
           >
             <Plus className="w-5 h-5" />
             Add Your Description

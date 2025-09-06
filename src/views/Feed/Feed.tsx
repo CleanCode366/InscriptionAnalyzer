@@ -25,28 +25,25 @@ const Feed = () => {
   
   const [posts, setPosts] = useState<Post[]>([]);
 
-  
+  function getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop()?.split(';').shift() || null;
+    }
+    return null;
+  }
+
   // Fetch posts from API
   useEffect(() => {
-    function getCookie(name: String) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(";").shift();
-    }
-
-    const getTokenFromCookie = () => {
-      const token = getCookie("token");
-      return token || 'hello';
-    };
     const fetchPosts = async () => {
       try {
-        const token = getTokenFromCookie();
-        console.log("Token in Feed:", token);
+        const token = getCookie('token');
         const response = await fetch('http://localhost:8080/post/getAllPost', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoidXNlciIsImV4cCI6MTc1NzAwNDc0NiwidXNlciI6Im5heWFuY29kaW5nQGdtYWlsLmNvbSIsImlhdCI6MTc1NjkxODM0Nn0.aBhbcTsImprO_qsI-B8eLZu35ETml6GYZ4pdLLCQpSo`,
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({}),
         });
@@ -67,8 +64,6 @@ const Feed = () => {
     Array.isArray(post?.script) && post.script.some(script => script?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  console.log("Filtered Posts:", filteredPosts);
-
   // Responsive layout adjustment
   useEffect(() => {
     const handleResize = () => {
@@ -88,21 +83,21 @@ const Feed = () => {
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Discover Archaeological Sites</h1>
-          <p className="text-gray-400">Explore ancient inscriptions and historical sites near you</p>
+          <p className="text-gray-400">Explore ancient inscriptions and historical sites</p>
         </div>
 
         {/* Filter Bar */}
-        <FilterBar 
+        {/* <FilterBar 
           layout={layout} 
           setLayout={setLayout}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-        />
+        /> */}
 
         {/* Results Count */}
         <div className="mb-4">
           <p className="text-gray-400 text-sm">
-            {filteredPosts.length} sites found {searchTerm && `for "${searchTerm}"`}
+            {/* {filteredPosts.length} sites found {searchTerm && `for "${searchTerm}"`} */}
           </p>
         </div>
 
@@ -124,7 +119,7 @@ const Feed = () => {
         </div>
 
         {/* Empty State */}
-        {filteredPosts.length === 0 && (
+        {/* {filteredPosts.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-500 mb-4">
               <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -132,10 +127,10 @@ const Feed = () => {
               <p className="text-sm">Try adjusting your search terms or filters</p>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Load More Button */}
-        {filteredPosts.length > 0 && (
+        {filteredPosts.length > 20 && (
           <div className="text-center mt-8">
             <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
               Load More Sites

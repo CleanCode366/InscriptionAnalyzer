@@ -1,6 +1,6 @@
 import type React from "react";
 import type { User } from "@/types";
-import { Heart, Star, Upload, Users } from "lucide-react";
+import { Heart, Star, ThumbsUp, Upload, Users } from "lucide-react";
 
 interface StatsGridProps {
   stats: User;
@@ -9,7 +9,7 @@ interface StatsGridProps {
 const StatsGrid: React.FC<StatsGridProps> = ({ stats }) => {
   const statItems = [
     { icon: Upload, value: stats.imagesUploaded, label: "Images Uploaded", color: "text-orange-500" },
-    { icon: Heart, value: stats.upvotesReceived, label: "Upvotes Received", color: "text-red-500" },
+    { icon: ThumbsUp, value: stats.upvotesReceived, label: "Upvotes Received", color: "text-yellow-500" },
     { icon: Users, value: stats.followers, label: "Followers", color: "text-blue-500" },
     { icon: Star, value: stats.points, label: "Points", color: "text-yellow-500" }
   ];

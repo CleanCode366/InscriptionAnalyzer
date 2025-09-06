@@ -1,3 +1,5 @@
+import { ProtectedRoute, PublicRoute } from "@/layouts/ProtectedLayOut/ProtectedLayout";
+import HomePage from "@/views/Home/Home";
 import InscriptionDetails from "@/views/InscriptionDetailPage.tsx/InscriptionDetails";
 import Upload from "@/views/Upload/Upload";
 import BaseLayout from "@layouts/MainLayout/BaseLayout";
@@ -14,37 +16,74 @@ const MainRoutes = {
   children: [
     {
       index: true,
-      element: <Navigate to="Feed" replace />
+      element: (
+        <ProtectedRoute>
+          <Navigate to="home" replace />
+        </ProtectedRoute>
+      )
+    },
+    {
+      path: 'home',
+      element: (
+        <HomePage />
+      )
     },
     {
       path: 'Feed',
-      element: <Feed />
+      element: (
+        <ProtectedRoute>
+          <Feed />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'upload',
-      element: <Upload/>
+      element: (
+        <ProtectedRoute>
+          <Upload />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'Feed/:id',
-      element: <InscriptionDetails/>
+      element: (
+        <ProtectedRoute>
+          <InscriptionDetails />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'settings',
-      element: <Setting/>
+      element: (
+        <ProtectedRoute>
+          <Setting />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'profile',
-      element:<Profile/>
+      element: (
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'photos',
-      element: <Gallery/>
+      element: (
+        <ProtectedRoute>
+          <Gallery />
+        </ProtectedRoute>
+      )
     },
     {
       path: 'login',
-      element: <AuthPage/>
+      element: (
+        <PublicRoute>
+          <AuthPage />
+        </PublicRoute>
+      )
     }
-    
   ]
 };
 

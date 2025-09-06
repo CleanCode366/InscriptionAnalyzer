@@ -9,7 +9,7 @@ interface CommentCardProps{
 // Comment Component
 const CommentCard: React.FC<CommentCardProps> = ({ comments }) => {
   const [isLiked, setIsLiked] = useState(false);
-  const [likes, setLikes] = useState(comments.description.upvote);
+  const [likes, setLikes] = useState(comments.upvote);
 
   const handleLike = () => {
     if (isLiked) {
@@ -20,13 +20,15 @@ const CommentCard: React.FC<CommentCardProps> = ({ comments }) => {
     setIsLiked(!isLiked);
   };
 
+  
+
   return (
     <div className="border-b border-gray-700 pb-6 mb-6 last:border-b-0">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
-          <h4 className="text-yellow-400 font-semibold text-lg mb-1">{comments.user_name}</h4>
+          <h4 className="text-yellow-400 font-semibold text-lg mb-1">{comments.username}</h4>
           <p className="text-gray-300 text-base leading-relaxed">
-            {comments.description.description}
+            {comments.description}
           </p>
         </div>
         <div className="ml-4 flex items-center gap-2">

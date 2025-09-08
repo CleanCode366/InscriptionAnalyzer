@@ -1,4 +1,5 @@
 import { Upload } from "lucide-react"
+import { NavLink } from "react-router-dom";
 
 const HeroSection = () => {
     return(
@@ -30,13 +31,13 @@ const HeroSection = () => {
 
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center text-primary-text">
-                    <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
+                    <NavLink to="/upload" className="bg-primary px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
                     <Upload className="inline mr-2 w-5 h-5" />
                     Upload Inscription
-                    </button>
-                    <button className="bg-slate-800/50 border border-slate-600 hover:bg-slate-700/50 px-8 py-4 rounded-xl font-semibold text-lg transition-all backdrop-blur-sm">
+                    </NavLink>
+                    <NavLink to="/feed" className="bg-slate-800/50 border border-slate-600 hover:bg-slate-700/50 px-8 py-4 rounded-xl font-semibold text-lg transition-all backdrop-blur-sm">
                     Explore Collection
-                    </button>
+                    </NavLink>
                 </div>
                 </div>
             </div>

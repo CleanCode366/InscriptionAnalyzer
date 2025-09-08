@@ -5,6 +5,7 @@ import CommentCard from './CommentCard';
 import RatingModal from './RatingModal';
 import { useParams } from 'react-router-dom';
 import Model from './Model';
+import ImageCarousel from './ImageCarousel';
 
 
 
@@ -12,6 +13,7 @@ interface InscriptionDetailsPageProp {
     postId: string;
 }
 export interface Comment {
+    id?: string;
     _id: string;
     postId: string;
     userId: string;
@@ -111,9 +113,9 @@ useEffect(() => {
       const matchedPost =
         allPosts.find((p: Post) => String(p._id) === String(postId)) || null;
 
-      console.log("Route param postId:", postId);
-      console.log("Available IDs:", allPosts.map((p: Post) => p._id));
-      console.log("Matched Post:", matchedPost);
+      // console.log("Route param postId:", postId);
+      // console.log("Available IDs:", allPosts.map((p: Post) => p._id));
+      // console.log("Matched Post:", matchedPost);
 
       setPost(matchedPost);
     } catch (error) {
@@ -190,13 +192,16 @@ useEffect(() => {
       <Model postId={postId as string} display={display} onClose={handleClose} />
       <div className="max-w-4xl mx-auto p-4">
         {/* Main Image */}
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <img 
             src={post.images.image[0]} 
             alt={post.description.title}
             className="w-full h-64 sm:h-80 md:h-96 object-cover rounded-lg"
           />
-        </div>
+        </div> */}
+        <ImageCarousel
+        images={post.images.image}
+        />
 
         {/* Title and Location */}
         <div className="mb-6">
@@ -314,6 +319,7 @@ useEffect(() => {
         onClose={() => setShowRatingModal(false)}
         currentRating={userRating}
         onSubmitRating={handleRating}
+        postId={postId as string}
       />
     </div>
   );

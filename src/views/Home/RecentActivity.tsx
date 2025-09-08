@@ -1,4 +1,5 @@
 import { ChevronRight, MapPin, Star, TrendingUp } from "lucide-react"
+import { NavLink } from "react-router-dom";
 
 const ReactActivity = () => {
       const recentDiscoveries = [
@@ -16,9 +17,9 @@ const ReactActivity = () => {
                 <div className="lg:col-span-2">
                 <div className="flex items-center justify-between mb-8">
                     <h3 className="text-2xl font-bold text-primary-text">Recent Discoveries</h3>
-                    <button className="text-blue-400 hover:text-blue-300 flex items-center">
+                    <NavLink to="/feed" className="text-blue-400 hover:text-blue-300 flex items-center">
                     View All <ChevronRight className="w-4 h-4 ml-1" />
-                    </button>
+                    </NavLink>
                 </div>
                 
                 <div className="space-y-4">

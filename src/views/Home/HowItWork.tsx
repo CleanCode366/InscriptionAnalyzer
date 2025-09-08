@@ -11,8 +11,10 @@ const HowItWork = () => {
 
             <div className="grid md:grid-cols-3 gap-8">
                 <div className="text-center group">
-                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Camera className="w-10 h-10" />
+                <div className="w-20 h-20 
+                broder border-slate-700
+                rounded-2xl mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Camera className="w-10 h-10 text-primary" />
                 </div>
                 <h4 className="text-xl font-semibold mb-3 text-primary-text">Discover & Upload</h4>
                 <p className="text-slate-400 leading-relaxed">
@@ -21,8 +23,10 @@ const HowItWork = () => {
                 </div>
 
                 <div className="text-center group">
-                <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <BookOpen className="w-10 h-10" />
+                <div className="w-20 h-20 
+                
+                rounded-2xl mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <BookOpen className="w-10 h-10 text-primary" />
                 </div>
                 <h4 className="text-xl font-semibold mb-3 text-primary-text">Transcribe & Translate</h4>
                 <p className="text-slate-400 leading-relaxed">
@@ -31,8 +35,10 @@ const HowItWork = () => {
                 </div>
 
                 <div className="text-center group">
-                <div className="w-20 h-20 bg-gradient-to-r from-pink-500 to-red-600 rounded-2xl mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Users className="w-10 h-10" />
+                <div className="w-20 h-20 
+                
+                rounded-2xl mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Users className="w-10 h-10 text-primary" />
                 </div>
                 <h4 className="text-xl font-semibold mb-3 text-primary-text">Share Knowledge</h4>
                 <p className="text-slate-400 leading-relaxed">

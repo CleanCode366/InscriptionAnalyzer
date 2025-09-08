@@ -63,7 +63,7 @@ const RatingModal: React.FC<RatingModalProps> = ({
     setError(null);
 
     try {
-      const result = await submitRatingToAPI("68b9536c4fe64bc0f81219ce", 3);
+      const result = await submitRatingToAPI(postId, rating);
       alert(`Rating submitted successfully: ${result}`);
       
       // Update local state

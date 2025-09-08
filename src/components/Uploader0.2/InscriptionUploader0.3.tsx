@@ -197,7 +197,7 @@ const parseGPSData = (dataView: DataView, gpsOffset: number, isLittleEndian: boo
 
 // Main Component
 const EnhancedInscriptionUploader: React.FC = () => {
-  const [photo, setPhoto] = useState<string | null>(null);
+  const [photos, setPhotos] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [hasGeoData, setHasGeoData] = useState<boolean | null>(null);
   const [geoInfo, setGeoInfo] = useState<GeoInfo | null>(null);
@@ -228,9 +228,9 @@ const EnhancedInscriptionUploader: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const inscriptionTypes = ["Stone", "Metal", "Wood", "Ceramic", "Papyrus", "Parchment", "Other"];
-  const conditions = ["Excellent", "Good", "Fair", "Poor", "Fragmentary"];
-  const historicalPeriods = ["Ancient", "Medieval", "Renaissance", "Modern", "Contemporary", "Unknown"];
+  // const inscriptionTypes = ["Stone", "Metal", "Wood", "Ceramic", "Papyrus", "Parchment", "Other"];
+  // const conditions = ["Excellent", "Good", "Fair", "Poor", "Fragmentary"];
+  // const historicalPeriods = ["Ancient", "Medieval", "Renaissance", "Modern", "Contemporary", "Unknown"];
 
   const startCamera = async (): Promise<void> => {
     try {
@@ -267,8 +267,8 @@ const EnhancedInscriptionUploader: React.FC = () => {
       const formData = new FormData();
       formData.append("file", blob, "inscription.jpg");
 
-      return true;
-      const response = await fetch("http://10.182.0.37/stone_inscriptions_ai/predict/", {
+      // return true;
+      const response = await fetch("http://10.182.6.144:8000/predict/", {
         method: "POST",
         body: formData,
       });
@@ -314,13 +314,13 @@ const EnhancedInscriptionUploader: React.FC = () => {
       }
       try {
         const locationData = await getCurrentLocation();
-        setPhoto(photoDataUrl);
+        setPhotos(prev => [...prev, photoDataUrl]);
         setGeoInfo(locationData);
         setHasGeoData(true);
         stopCamera();
       } catch (error) {
         setError("Location access denied. Photo captured without GPS data.");
-        setPhoto(photoDataUrl);
+        setPhotos(prev => [...prev, photoDataUrl]);
         setHasGeoData(false);
         stopCamera();
       }
@@ -328,31 +328,48 @@ const EnhancedInscriptionUploader: React.FC = () => {
   };
 
   const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setError(null);
-    
-    try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const photoDataUrl = reader.result as string;
-        const isStone = await checkStoneInscription(photoDataUrl);
-        if (!isStone) return;
-        setPhoto(photoDataUrl);
-        const exifData = await extractEXIFData(file);
-        if (exifData && exifData.hasGPS) {
-          setHasGeoData(true);
-          setGeoInfo(exifData);
-        } else {
-          setHasGeoData(false);
-          setGeoInfo(null);
-        }
-      };
-      reader.readAsDataURL(file);
-    } catch (err) {
-      console.log(err);
-      setError("Failed to read the uploaded file.");
+
+    const newPhotos: string[] = [];
+    let errorMessages: string[] = [];
+
+    for (const [idx, file] of Array.from(files).entries()) {
+      try {
+        const reader = new FileReader();
+        await new Promise<void>((resolve, reject) => {
+          reader.onload = async () => {
+            const photoDataUrl = reader.result as string;
+            const isStone = await checkStoneInscription(photoDataUrl);
+            if (!isStone) {
+              errorMessages.push(`File ${idx + 1} is not a stone inscription.`);
+              return resolve();
+            }
+            newPhotos.push(photoDataUrl);
+            const exifData = await extractEXIFData(file);
+            if (exifData && exifData.hasGPS) {
+              setHasGeoData(true);
+              setGeoInfo(exifData);
+            } else {
+              setHasGeoData(false);
+              setGeoInfo(null);
+            }
+            resolve();
+          };
+          reader.onerror = () => reject();
+          reader.readAsDataURL(file);
+        });
+      } catch (err) {
+        console.log(err);
+        errorMessages.push(`Failed to read file ${idx + 1}.`);
+      }
+    }
+
+    setPhotos(prev => [...prev, ...newPhotos]);
+    if (errorMessages.length > 0) {
+      setError(errorMessages.join(" "));
     }
   };
 
@@ -374,29 +391,32 @@ const EnhancedInscriptionUploader: React.FC = () => {
     }
   };
 
-  const getCurrentUserLocation = () => {
-    getCurrentLocation()
-      .then((location) => {
-        if (location.latitude && location.longitude) {
-          setFormData(prev => ({
-            ...prev,
-            manualLocation: `${location.latitude}, ${location.longitude}`
-          }));
-        }
-      })
-      .catch(() => {
-        setError("Could not get current location. Please enter manually.");
-      });
-  };
+  // const getCurrentUserLocation = () => {
+  //   getCurrentLocation()
+  //     .then((location) => {
+  //       if (location.latitude && location.longitude) {
+  //         setFormData(prev => ({
+  //           ...prev,
+  //           manualLocation: `${location.latitude}, ${location.longitude}`
+  //         }));
+  //       }
+  //     })
+  //     .catch(() => {
+  //       setError("Could not get current location. Please enter manually.");
+  //     });
+  // };
 
   const handleUpload = async () => {
-    if (!photo) return;
+    if (photos.length === 0) return;
     setIsUploading(true);
 
     try {
-      // Convert base64 to Blob
-      const res = await fetch(photo);
-      const blob = await res.blob();
+      const form = new FormData();
+      for (let i = 0; i < photos.length; i++) {
+        const res = await fetch(photos[i]);
+        const blob = await res.blob();
+        form.append("files", blob, `inscription_${i + 1}.jpg`);
+      }
 
       // Prepare post object
       const postData: PostSchema = {
@@ -409,33 +429,27 @@ const EnhancedInscriptionUploader: React.FC = () => {
         }
       };
 
-      function getCookie(name: String) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(";").shift();
-      }
-
       const token = getCookie("token");
 
-      const form = new FormData();
-      form.append("files", blob, "inscription.jpg");
-      form.append("post", new Blob([JSON.stringify(postData)],{type: "application/json"}) );
+      form.append("post", new Blob([JSON.stringify(postData)], { type: "application/json" }));
+
       const response = await fetch("http://localhost:8080/post/addPostWithFile", {
         method: "POST",
         headers: {
-          contentType: "multipart/form-data",
           Authorization: `Bearer ${token}`
         },
         body: form
       });
 
       if (!response.ok) {
-        const errorText = await response.text(); // or response.json() if backend returns JSON
+        const errorText = await response.text();
         throw new Error(`${response.status} - ${errorText}`);
       }
 
-      alert("Inscription uploaded successfully!");
+      alert("Inscription(s) uploaded successfully!");
       resetForm();
+      // redirect to feed section
+      window.location.href = "/feed";
     } catch (error) {
       if (error instanceof Error) {
         console.error("Backend error:", error.message);
@@ -454,7 +468,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
   };
 
   const resetForm = () => {
-    setPhoto(null);
+    setPhotos([]);
     setHasGeoData(null);
     setGeoInfo(null);
     setError(null);
@@ -532,18 +546,23 @@ const EnhancedInscriptionUploader: React.FC = () => {
                 </button>
               </div>
             </div>
-          ) : photo ? (
+          ) : photos.length > 0 ? (
             <div className="space-y-4">
-              <img
-                src={photo}
-                alt="Captured inscription"
-                className="w-full h-64 object-cover rounded-lg"
-              />
+              <div className="grid grid-cols-2 gap-2">
+                {photos.map((photo, idx) => (
+                  <img
+                    key={idx}
+                    src={photo}
+                    alt={`Captured inscription ${idx + 1}`}
+                    className="w-full h-32 object-cover rounded-lg"
+                  />
+                ))}
+              </div>
               <button
                 onClick={resetForm}
                 className="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition"
               >
-                Take Another Photo
+                Upload More Photos
               </button>
             </div>
           ) : (
@@ -572,6 +591,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={handleFileUpload}
                 className="hidden"
               />
@@ -679,7 +699,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
         <div className="mt-8 space-y-4">
           <button
             onClick={handleUpload}
-            disabled={!photo || isUploading}
+            disabled={!photos.length || isUploading}
             className="w-full px-6 py-4 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-medium transition flex items-center justify-center gap-2"
           >
             {isUploading ? (

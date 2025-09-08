@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import img1 from "@assets/user/ins/inscription1.png"
 import img2 from "@assets/user/ins/inscription2.png"
 import img3 from "@assets/user/ins/inscription3.png"
+import { NavLink } from "react-router-dom";
 
 const FeaturedInscriptionsCarousel = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -103,10 +104,10 @@ const FeaturedInscriptionsCarousel = () => {
                             </div>
                             </div>
 
-                            <button className="bg-gradient-to-r bg-primary px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105 flex items-center">
+                            <NavLink to="/feed/68b954134fe64bc0f81219d0" className="bg-gradient-to-r bg-primary px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105 flex items-center">
                             Explore Details
                             <ChevronRight className="w-5 h-5 ml-2" />
-                            </button>
+                            </NavLink>
                         </div>
                         </div>
                     </div>
@@ -121,7 +122,7 @@ const FeaturedInscriptionsCarousel = () => {
                     key={index}
                     onClick={() => setCurrentSlide(index)}
                     className={`w-3 h-3 rounded-full transition-colors ${
-                        currentSlide === index ? 'bg-blue-500' : 'bg-slate-600'
+                        currentSlide === index ? 'bg-primary' : 'bg-slate-600'
                     }`}
                     />
                 ))}

@@ -1,4 +1,5 @@
 import type React from "react";
+import { NavLink } from "react-router-dom";
 
 const CallToAction: React.FC = () => {
     return(
@@ -11,9 +12,9 @@ const CallToAction: React.FC = () => {
                 Every contribution helps preserve our shared human heritage.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="bg-primary px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
+                <NavLink to="/upload" className="bg-primary px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
                     Start Contributing
-                </button>
+                </NavLink>
                 <button className="border border-slate-600 hover:bg-slate-800/50 px-8 py-4 rounded-xl font-semibold text-lg transition-all">
                     Learn More
                 </button>

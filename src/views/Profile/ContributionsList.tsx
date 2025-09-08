@@ -1,4 +1,3 @@
-import type { Post } from "@/types";
 import { Heart } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -9,7 +8,7 @@ export interface Comment {
     userId: string;
     username: string;
     userImageUrl?: string;
-    // postImageUrl?: string;
+    postImageUrl?: string;
     createdAt: Date;
     updatedAt: Date;
     description: string;
@@ -75,7 +74,8 @@ const ContributionsList: React.FC<ContributionsListProps> = ({ comments }) => {
               <div className="flex gap-4">
                 <img 
                   // src={post.postImageUrl || '/default-profile.png'} 
-                  src={post.userImageUrl || '/default-profile.png'} 
+                  src={post.postImageUrl || ''}
+                  // src={post.userImageUrl || '/default-profile.png'} 
                   alt={post.description}
                   className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
                 />

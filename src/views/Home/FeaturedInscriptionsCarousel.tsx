@@ -1,8 +1,8 @@
 import { Calendar, ChevronRight, Eye, Heart, MapPin, MessageCircle } from "lucide-react"
 import { useEffect, useState } from "react";
-import img1 from "@assets/user/ins/inscription1.png"
-import img2 from "@assets/user/ins/inscription2.png"
-import img3 from "@assets/user/ins/inscription3.png"
+import img1 from "@assets/AncientSanskritStoneInsc.webp"
+import img2 from "@assets/tamilCopperPlate.avif"
+import img3 from "@assets/mediaPersianInscription.webp"
 import { NavLink } from "react-router-dom";
 
 const FeaturedInscriptionsCarousel = () => {

@@ -27,60 +27,19 @@ const RatingModal: React.FC<RatingModalProps> = ({
 
   if (!isOpen) return null;
 
-  function getCookie(name: string): string | null {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      return parts.pop()?.split(';').shift() || null;
-    }
-    return null;
-  }
-  
-  const submitRatingToAPI = async (postId: string, rating: number): Promise<string> => {
-    const myHeaders = new Headers();
-    const token = getCookie('token');
-    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-    myHeaders.append("Authorization", `Bearer ${token}`);
-    const urlencoded = new URLSearchParams();
-    urlencoded.append("postId", postId);
-    urlencoded.append("rating", rating.toString());
-    const requestOptions: RequestInit = {
-      method: 'POST',
-      headers: myHeaders,
-      body: urlencoded,
-      redirect: 'follow'
-    };
-    const response = await fetch("http://localhost:8080/post/addRating", requestOptions);
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
-    }
-    const result = await response.text();
-    return result;
-  };
-
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const result = await submitRatingToAPI(postId, rating);
-      alert(`Rating submitted successfully: ${result}`);
-      
-      // Update local state
-      onSubmitRating(rating);
-      
-      // Notify parent of success
+      await onSubmitRating(rating); // Now parent handles API and state
       if (onRatingSubmitted) {
-        onRatingSubmitted(true, result);
+        onRatingSubmitted(true);
       }
-      
       onClose();
     } catch (error) {
-      console.error('Failed to submit rating:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to submit rating';
       setError(errorMessage);
-      
-      // Notify parent of failure
       if (onRatingSubmitted) {
         onRatingSubmitted(false, errorMessage);
       }

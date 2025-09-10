@@ -11,7 +11,6 @@ interface CommentCardProps{
 const CommentCard: React.FC<CommentCardProps> = ({ comments }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(comments.upvote);
-  // user details is of type User
   const [UserDetails, SetUserDetails] = useState<User>();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -24,11 +23,11 @@ const CommentCard: React.FC<CommentCardProps> = ({ comments }) => {
     return null;
   }  
 
-  // api to like or dislike a post
+  // Like/Dislike API
   const LikeDisLikeAPI = async () => {
     const token = getCookie('token');
-    if (!token) {
-      console.error('No token found');
+    if (!token || !UserDetails?._id) {
+      console.error('No token or user');
       return;
     }
 
@@ -45,31 +44,22 @@ const CommentCard: React.FC<CommentCardProps> = ({ comments }) => {
       redirect: "follow" as RequestRedirect,
     };
 
+    // Optimistically update UI
+    setIsLiked((prev) => !prev);
+    setLikes((prev) => prev + (isLiked ? -1 : 1));
+
     try {
       const response = await fetch("http://localhost:8080/post/addVote", requestOptions);
       const result = await response.text();
       console.log(result);
-      // Optionally update UI state here
+      // Optionally, you can refetch the comment or update userVote array here
     } catch (error) {
+      // Revert UI if error
+      setIsLiked((prev) => !prev);
+      setLikes((prev) => prev + (isLiked ? 1 : -1));
       console.error(error);
-    } finally {
-      // Toggle like state and update likes count
-      if (isLiked) {
-        setLikes(likes - 1);
-      } else {
-        setLikes(likes + 1);
-      }
-      setIsLiked(!isLiked);
     }
   };
-
-  // if comments.userVote[] contains userId then set isLiked to true
-  if (UserDetails?._id && comments.userVote.includes(UserDetails._id) && !isLiked) {
-    console.log("UserDetails");
-    console.log(UserDetails?._id, comments.userVote);
-    setIsLiked(true);
-    setLikes(likes + 1);
-  }
 
   useEffect(() => {
       // Get token at the beginning
@@ -105,17 +95,20 @@ const CommentCard: React.FC<CommentCardProps> = ({ comments }) => {
           console.error('Failed to fetch posts:', error);
         } finally {
           setIsLoading(false);
-          if (UserDetails?._id && comments.userVote.includes(UserDetails._id) && !isLiked) {
-            console.log("UserDetails");
-            console.log(UserDetails?._id, comments.userVote);
-            setIsLiked(true);
-            setLikes(likes + 1);
-          }
         }
       };
       fetchUser();
     }, []);
     
+  // Set isLiked based on userVote and UserDetails
+  useEffect(() => {
+    if (UserDetails?._id) {
+      const liked = comments.userVote.includes(UserDetails._id);
+      setIsLiked(liked);
+      setLikes(comments.upvote + (liked ? 0 : 0)); // upvote is already correct
+    }
+  }, [UserDetails, comments.userVote, comments.upvote]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-primary-background flex items-center justify-center">

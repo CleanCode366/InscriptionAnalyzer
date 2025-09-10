@@ -11,7 +11,7 @@ const HeroSection = () => {
                     Decode Ancient Wisdom Together
                 </h2>
                 <p className="text-xl text-primary-text/60 max-w-3xl mx-auto mb-8">
-                    Join the world's largest collaborative platform for archaeological inscriptions. 
+                    Join the C-DAC's collaborative platform for archaeological inscriptions. 
                     Discover, transcribe, translate, and preserve humanity's written heritage.
                 </p>
                 

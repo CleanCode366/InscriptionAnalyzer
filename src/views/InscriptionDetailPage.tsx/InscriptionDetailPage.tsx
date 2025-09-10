@@ -164,11 +164,40 @@ useEffect(() => {
 }, [postId]); // ✅ now it listens to route changes
 
 
-  const handleRating = (newRating: number) => {
-    setUserRating(newRating);
-    // Here you would typically send the rating to your API
-    console.log('Rating submitted:', newRating);
+// Add this function inside your component
+const submitRatingToAPI = async (postId: string, rating: number): Promise<string> => {
+  const myHeaders = new Headers();
+  const token = getCookie('token');
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+  myHeaders.append("Authorization", `Bearer ${token}`);
+  const urlencoded = new URLSearchParams();
+  urlencoded.append("postId", postId);
+  urlencoded.append("rating", rating.toString());
+  const requestOptions: RequestInit = {
+    method: 'POST',
+    headers: myHeaders,
+    body: urlencoded,
+    redirect: 'follow'
   };
+  const response = await fetch("http://localhost:8080/post/addRating", requestOptions);
+  if (!response.ok) {
+    throw new Error(`Error: ${response.statusText}`);
+  }
+  const result = await response.text();
+  return result;
+};
+
+const handleRating = async (newRating: number) => {
+  setUserRating(newRating);
+  try {
+    await submitRatingToAPI(postId as string, newRating);
+    // Update post.rating in state so UI updates
+    setPost(prev => prev ? { ...prev, rating: newRating } : prev);
+  } catch (error) {
+    console.error('Failed to submit rating:', error);
+    // Optionally show error to user
+  }
+};
 
 
   if (loading) {

@@ -9,9 +9,7 @@ import ImageCarousel from './ImageCarousel';
 
 
 
-interface InscriptionDetailsPageProp {
-    postId: string;
-}
+
 export interface Comment {
     id?: string;
     _id: string;
@@ -140,7 +138,7 @@ useEffect(() => {
       const urlencoded = new URLSearchParams();
       urlencoded.append("postId", postId);
 
-      const requestOptions = {
+      const requestOptions: RequestInit = {
         method: "POST",
         headers: myHeaders,
         body: urlencoded,
@@ -220,16 +218,8 @@ const handleRating = async (newRating: number) => {
     <div className="min-h-screen bg-primary-background">
       <Model postId={postId as string} display={display} onClose={handleClose} />
       <div className="max-w-4xl mx-auto p-4">
-        {/* Main Image */}
-        {/* <div className="mb-6">
-          <img 
-            src={post.images.image[0]} 
-            alt={post.description.title}
-            className="w-full h-64 sm:h-80 md:h-96 object-cover rounded-lg"
-          />
-        </div> */}
         <ImageCarousel
-        images={post.images.image}
+          images={Array.isArray(post.images.image) ? post.images.image : []}
         />
 
         {/* Title and Location */}

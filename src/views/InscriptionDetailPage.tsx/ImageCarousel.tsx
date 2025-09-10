@@ -1,7 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const ImageCarousel = ({ 
+interface ImageCarouselProps {
+  images: string[];
+  alt?: string;
+  className?: string;
+  showIndicators?: boolean;
+  showArrows?: boolean;
+}
+
+const ImageCarousel: React.FC<ImageCarouselProps> = ({ 
   images = [], 
   alt = "", 
   className = "w-full h-64 sm:h-80 md:h-96",

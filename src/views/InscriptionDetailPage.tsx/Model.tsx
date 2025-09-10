@@ -14,16 +14,18 @@ const Model: React.FC<ModelProps> = ({ postId, display, onClose }) => {
   const handleInputChange = (e: String) => {
     setInputValue(e as string);
   };
+  
+   function getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop()?.split(';').shift() || null;
+    }
+    return null;
+  }
 
   const handlePost = async () => {
-  try {
-    
-    function getCookie(name: String) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(";").shift();
-    }
-
+  try {  
     const token = getCookie("token");
     const form = new FormData();
     form.append("postId", postId);
@@ -37,7 +39,7 @@ const Model: React.FC<ModelProps> = ({ postId, display, onClose }) => {
     urlencoded.append("postId", postId);
     urlencoded.append("discription", inputValue);
 
-    const requestOptions = {
+    const requestOptions: RequestInit = {
       method: "POST",
       headers: myHeaders,
       body: urlencoded,

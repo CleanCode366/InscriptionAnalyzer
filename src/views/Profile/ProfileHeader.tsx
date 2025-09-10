@@ -15,6 +15,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
             src={user.profileImage} 
             alt={user.name}
             className="w-20 h-20 rounded-full border-2 border-orange-500"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = profileImg;
+            }}
           />
           <div className="absolute -bottom-1 -right-1 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
             6

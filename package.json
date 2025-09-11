@@ -3,10 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "proxy": "http://localhost:8080",
+  "proxy": "http://localhost:8080/",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc --noEmit && vite build",
+    "build:production": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",

@@ -7,42 +7,53 @@ import ReactActivity from "./RecentActivity";
 import WhyJoinSection from "./WhyJoinSection";
 import CallToAction from "./CallToAction";
 import Footer from "./Footer";
+import FadeInWrapper from "../../components/FadeInWrapper";
+import "../../styles/fadeIn.css";
 
 
 const HomePage: React.FC = () => {
-
-
   return (
     <>
-      {/* Navigation */}
-      {/* <Nav/> */}
-
       {/* Hero Section */}
-      <HeroSection/>
+      <FadeInWrapper>
+        <HeroSection/>
+      </FadeInWrapper>
 
       {/* Statistics */}
-      <Statistics/>
+      <FadeInWrapper>
+        <Statistics/>
+      </FadeInWrapper>
 
       {/* Featured Inscriptions Carousel */}
-      <FeaturedInscriptionsCarousel/>
+      <FadeInWrapper>
+        <FeaturedInscriptionsCarousel/>
+      </FadeInWrapper>
 
       {/* How It Works */}
-      <HowItWork/>
+      <FadeInWrapper>
+        <HowItWork/>
+      </FadeInWrapper>
 
       {/* Recent Activity */}
-      <ReactActivity/>
+      <FadeInWrapper>
+        <ReactActivity/>
+      </FadeInWrapper>
 
       {/* Why Join Section */}
-      <WhyJoinSection/>
+      <FadeInWrapper>
+        <WhyJoinSection/>
+      </FadeInWrapper>
 
       {/* Call to Action */}
-      <CallToAction/>
+      <FadeInWrapper>
+        <CallToAction/>
+      </FadeInWrapper>
 
       {/* Footer */}
-      <Footer/>
+      <FadeInWrapper>
+        <Footer/>
+      </FadeInWrapper>
     </>
-    // <div className="min-h-screen text-white">
-    // </div>
   );
 };
 

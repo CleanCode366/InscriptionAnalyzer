@@ -11,14 +11,18 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
     <div className="rounded-lg pt-6 pb-6 mb-6">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
         <div className="relative">
-          <img 
+          {/* only the first leter of the name */}
+          <div className="w-20 h-20 rounded-full border-2 border-orange-500 bg-gray-600 flex items-center justify-center text-3xl font-bold text-white">
+            {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+          </div>
+          {/* <img 
             src={user.profileImage} 
             alt={user.name}
             className="w-20 h-20 rounded-full border-2 border-orange-500"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = profileImg;
             }}
-          />
+          /> */}
           <div className="absolute -bottom-1 -right-1 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
             6
           </div>

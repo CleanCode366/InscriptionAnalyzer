@@ -52,7 +52,7 @@ interface PostSchema {
 // Utility functions
 const startCameraStream = async (): Promise<MediaStream> => {
   return navigator.mediaDevices.getUserMedia({
-    video: { 
+    video: {
       facingMode: "environment",
       width: { ideal: 1920 },
       height: { ideal: 1080 }
@@ -92,10 +92,10 @@ const extractEXIFData = (file: File): Promise<GeoInfo | null> => {
     reader.onload = (e) => {
       const arrayBuffer = e.target?.result as ArrayBuffer;
       const dataView = new DataView(arrayBuffer);
-      
+
       let offset = 2;
       const maxOffset = Math.min(65535, dataView.byteLength);
-      
+
       while (offset < maxOffset) {
         const marker = dataView.getUint16(offset);
         if (marker === 0xFFE1) {
@@ -121,17 +121,17 @@ const parseEXIFForGPS = (dataView: DataView): GeoInfo | null => {
       dataView.getUint8(2),
       dataView.getUint8(3)
     );
-    
+
     if (exifHeader !== "Exif") return null;
-    
+
     let offset = 6;
     const byteOrder = dataView.getUint16(offset);
     const isLittleEndian = byteOrder === 0x4949;
-    
-    const ifd0Offset = isLittleEndian 
+
+    const ifd0Offset = isLittleEndian
       ? dataView.getUint32(offset + 4, true)
       : dataView.getUint32(offset + 4, false);
-    
+
     return findGPSIFD(dataView, offset + ifd0Offset, isLittleEndian);
   } catch (error) {
     return null;
@@ -140,22 +140,22 @@ const parseEXIFForGPS = (dataView: DataView): GeoInfo | null => {
 
 const findGPSIFD = (dataView: DataView, ifdOffset: number, isLittleEndian: boolean): GeoInfo | null => {
   try {
-    const numEntries = isLittleEndian 
+    const numEntries = isLittleEndian
       ? dataView.getUint16(ifdOffset, true)
       : dataView.getUint16(ifdOffset, false);
-    
+
     let currentOffset = ifdOffset + 2;
-    
+
     for (let i = 0; i < numEntries; i++) {
-      const tag = isLittleEndian 
+      const tag = isLittleEndian
         ? dataView.getUint16(currentOffset, true)
         : dataView.getUint16(currentOffset, false);
-      
+
       if (tag === 0x8825) {
-        const gpsOffset = isLittleEndian 
+        const gpsOffset = isLittleEndian
           ? dataView.getUint32(currentOffset + 8, true)
           : dataView.getUint32(currentOffset + 8, false);
-        
+
         return parseGPSData(dataView, ifdOffset - 4 + gpsOffset, isLittleEndian);
       }
       currentOffset += 12;
@@ -168,24 +168,24 @@ const findGPSIFD = (dataView: DataView, ifdOffset: number, isLittleEndian: boole
 
 const parseGPSData = (dataView: DataView, gpsOffset: number, isLittleEndian: boolean): GeoInfo | null => {
   try {
-    const gpsEntries = isLittleEndian 
+    const gpsEntries = isLittleEndian
       ? dataView.getUint16(gpsOffset, true)
       : dataView.getUint16(gpsOffset, false);
-    
+
     let latRef = null, lonRef = null;
     let currentOffset = gpsOffset + 2;
-    
+
     for (let i = 0; i < gpsEntries; i++) {
-      const tag = isLittleEndian 
+      const tag = isLittleEndian
         ? dataView.getUint16(currentOffset, true)
         : dataView.getUint16(currentOffset, false);
-      
+
       if (tag === 1) latRef = String.fromCharCode(dataView.getUint8(currentOffset + 8));
       if (tag === 3) lonRef = String.fromCharCode(dataView.getUint8(currentOffset + 8));
-      
+
       currentOffset += 12;
     }
-    
+
     if (latRef && lonRef) {
       return { hasGPS: true, latRef, lonRef };
     }
@@ -197,7 +197,7 @@ const parseGPSData = (dataView: DataView, gpsOffset: number, isLittleEndian: boo
 
 // Main Component
 const EnhancedInscriptionUploader: React.FC = () => {
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [photos, setPhotos] = useState<{ url: string; file?: File }[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [hasGeoData, setHasGeoData] = useState<boolean | null>(null);
   const [geoInfo, setGeoInfo] = useState<GeoInfo | null>(null);
@@ -206,7 +206,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isCheckingStone, setIsCheckingStone] = useState(false);
   const [stoneCheckResult, setStoneCheckResult] = useState<string | null>(null);
-  
+
   // Form data
   const [formData, setFormData] = useState<PostSchema>({
     description: {},
@@ -238,7 +238,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
       setIsCapturing(true);
       const mediaStream = await startCameraStream();
       setStream(mediaStream);
-      
+
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
         videoRef.current.play();
@@ -296,13 +296,13 @@ const EnhancedInscriptionUploader: React.FC = () => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
     const ctx = canvas.getContext('2d');
-    
+
     if (!ctx) return;
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0);
-    
+
     canvas.toBlob(async (blob) => {
       if (!blob) return;
 
@@ -314,13 +314,13 @@ const EnhancedInscriptionUploader: React.FC = () => {
       }
       try {
         const locationData = await getCurrentLocation();
-        setPhotos(prev => [...prev, photoDataUrl]);
+        setPhotos(prev => [...prev, { url: photoDataUrl }]);
         setGeoInfo(locationData);
         setHasGeoData(true);
         stopCamera();
       } catch (error) {
         setError("Location access denied. Photo captured without GPS data.");
-        setPhotos(prev => [...prev, photoDataUrl]);
+        setPhotos(prev => [...prev, { url: photoDataUrl }]);
         setHasGeoData(false);
         stopCamera();
       }
@@ -333,7 +333,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
 
     setError(null);
 
-    const newPhotos: string[] = [];
+    const newPhotos: { url: string; file: File }[] = [];
     let errorMessages: string[] = [];
 
     for (const [idx, file] of Array.from(files).entries()) {
@@ -347,7 +347,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
               errorMessages.push(`File ${idx + 1} is not a stone inscription.`);
               return resolve();
             }
-            newPhotos.push(photoDataUrl);
+            newPhotos.push({ url: photoDataUrl, file });
             const exifData = await extractEXIFData(file);
             if (exifData && exifData.hasGPS) {
               setHasGeoData(true);
@@ -413,9 +413,15 @@ const EnhancedInscriptionUploader: React.FC = () => {
     try {
       const form = new FormData();
       for (let i = 0; i < photos.length; i++) {
-        const res = await fetch(photos[i]);
-        const blob = await res.blob();
-        form.append("files", blob, `inscription_${i + 1}.jpg`);
+        if (photos[i].file) {
+          // Use the original file name
+          form.append("files", photos[i].file, photos[i].file.name);
+        } else {
+          // Fallback for camera-captured images (no file, only Data URL)
+          const res = await fetch(photos[i].url);
+          const blob = await res.blob();
+          form.append("files", blob, `inscription_${i + 1}.jpg`);
+        }
       }
 
       // Prepare post object
@@ -497,11 +503,10 @@ const EnhancedInscriptionUploader: React.FC = () => {
 
         {/* GPS Status */}
         {hasGeoData !== null && (
-          <div className={`mb-4 p-3 rounded-lg text-sm ${
-            hasGeoData 
-              ? 'bg-green-900/50 border border-green-700 text-green-300' 
+          <div className={`mb-4 p-3 rounded-lg text-sm ${hasGeoData
+              ? 'bg-green-900/50 border border-green-700 text-green-300'
               : 'bg-yellow-900/50 border border-yellow-700 text-yellow-300'
-          }`}>
+            }`}>
             {hasGeoData ? (
               <div>
                 ✅ GPS data found!
@@ -552,7 +557,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
                 {photos.map((photo, idx) => (
                   <img
                     key={idx}
-                    src={photo}
+                    src={photo.url}
                     alt={`Captured inscription ${idx + 1}`}
                     className="w-full h-32 object-cover rounded-lg"
                   />

@@ -12,35 +12,38 @@ const FeaturedInscriptionsCarousel = () => {
         {
         id: 1,
         title: "Ancient Sanskrit Stone Tablet",
-        location: "Hampi, Karnataka",
-        period: "14th Century",
+        // location: "Hampi, Karnataka",
+        // period: "14th Century",
         image: img1,
         description: "Detailed Vijayanagara empire inscription with royal decrees",
-        likes: 234,
-        views: 1542,
-        comments: 45
+        link: "/feed/68c7a90e62ee5a8274fceaac",
+        // likes: 234,
+        // views: 1542,
+        // comments: 45
         },
         {
         id: 2,
         title: "Tamil Copper Plate Inscription",
-        location: "Thanjavur, Tamil Nadu",
-        period: "11th Century",
+        // location: "Thanjavur, Tamil Nadu",
+        // period: "11th Century",
         image: img2,
         description: "Chola dynasty land grant inscription with detailed genealogy",
-        likes: 189,
-        views: 987,
-        comments: 32
+        link: "/feed/68c7a9a162ee5a8274fceab0",
+        // likes: 189,
+        // views: 987,
+        // comments: 32
         },
         {
         id: 3,
         title: "Medieval Persian Script",
-        location: "Delhi",
-        period: "13th Century",
+        // location: "Delhi",
+        // period: "13th Century",
         image: img3,
         description: "Sultanate period architectural inscription from Qutub complex",
-        likes: 156,
-        views: 743,
-        comments: 28
+        link: "/feed/68c7a95062ee5a8274fceaae"
+        // likes: 156,
+        // views: 743,
+        // comments: 28
         }
     ];
 
@@ -77,19 +80,19 @@ const FeaturedInscriptionsCarousel = () => {
                         </div>
                         <div className="flex flex-col justify-center">
                             <h4 className="text-2xl font-bold mb-3 text-primary-text">{inscription.title}</h4>
-                            <div className="flex items-center text-slate-400 mb-2">
+                            {/* <div className="flex items-center text-slate-400 mb-2">
                             <MapPin className="w-4 h-4 mr-2" />
                             {inscription.location}
                             </div>
                             <div className="flex items-center text-slate-400 mb-4">
                             <Calendar className="w-4 h-4 mr-2" />
                             {inscription.period}
-                            </div>
+                            </div> */}
                             <p className="text-slate-300 mb-6 leading-relaxed">{inscription.description}</p>
                             
                             <div className="flex items-center justify-between mb-6">
                             <div className="flex space-x-6 text-sm text-slate-400">
-                                <span className="flex items-center">
+                                {/* <span className="flex items-center">
                                 <Heart className="w-4 h-4 mr-1" />
                                 {inscription.likes}
                                 </span>
@@ -100,11 +103,11 @@ const FeaturedInscriptionsCarousel = () => {
                                 <span className="flex items-center">
                                 <MessageCircle className="w-4 h-4 mr-1" />
                                 {inscription.comments}
-                                </span>
+                                </span> */}
                             </div>
                             </div>
 
-                            <NavLink to="/feed/68b954134fe64bc0f81219d0" className="bg-gradient-to-r bg-primary px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105 flex items-center">
+                            <NavLink to={inscription.link} className="bg-gradient-to-r bg-primary px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105 flex items-center">
                             Explore Details
                             <ChevronRight className="w-5 h-5 ml-2" />
                             </NavLink>

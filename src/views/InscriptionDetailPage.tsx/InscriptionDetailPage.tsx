@@ -236,8 +236,8 @@ const handleRating = async (newRating: number) => {
         {/* Rating and Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <StarRating rating={post.rating || 0} />
-            <span className="text-gray-300">({post.rating || 0})</span>
+            {post.rating && <StarRating rating={post.rating} />}
+            {/* <span className="text-gray-300">({post.})</span> */}
           </div>
           <div className="flex gap-3">
             <button

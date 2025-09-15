@@ -267,7 +267,7 @@ const EnhancedInscriptionUploader: React.FC = () => {
       const formData = new FormData();
       formData.append("file", blob, "inscription.jpg");
 
-      return true;
+      // return true;
       const response = await fetch("http://10.182.6.144:8000/predict/", {
         method: "POST",
         body: formData,

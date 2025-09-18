@@ -1,9 +1,10 @@
-import type { Post } from "@/types";
+
 import type React from "react";
 import { useState } from "react";
 import StarRating from "./StarRating";
 import { Heart, MapPin } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import type { Post } from "./Feed";
 
 interface DiscoveryCardProps {
   post: Post;
@@ -36,7 +37,8 @@ const DiscoveryCard: React.FC<DiscoveryCardProps> = ({ post, layout = "grid" }) 
               <div className="flex-1 min-w-0">
                 <h3 className="text-white font-semibold text-lg mb-1 truncate">{post.description.title}</h3>
                 <div className="flex items-center gap-2 mb-2">
-                  {post.rating && <StarRating rating={post.rating} />}
+                  {post.rating && post.rating != 0 && <StarRating rating={post.rating} />}
+                  <h1 className="text-9xl font-bold text-red-500">Hello</h1>
                 </div>
               </div>
               
@@ -85,12 +87,19 @@ const DiscoveryCard: React.FC<DiscoveryCardProps> = ({ post, layout = "grid" }) 
           {post.distance} miles
         </div> */}
         <div className="absolute bottom-3 left-3 right-3">
-          <div className="bg-primary-background bg-opacity-80 rounded-lg p-3">
+          {
+            post.rating == 0 && post.description.title == null ? null :    
+          (<div className="bg-primary-background bg-opacity-80 rounded-lg p-3">
             <h3 className="text-white font-semibold text-lg mb-1">{post.description.title}</h3>
-            <div className="flex items-center gap-2">
-              {post.rating && <StarRating rating={post.rating} />}
-            </div>
-          </div>
+            {
+              post.rating != 0 && (
+                    <div className="flex items-center gap-2">
+                      {post.rating && <StarRating rating={post.rating} />}
+                    </div>
+                )
+            }
+          </div>)
+          }
         </div>
       </div>
       

@@ -4,6 +4,21 @@ import FilterBar from './FilterBar';
 import DiscoveryCard from './DiscoveryCard';
 // import { getTokenFromCookie } from '@/utils/cookieUtils';
 
+export interface Post {
+   _id: string;
+    description: {
+      title: string;
+      subject: string;
+      geolocation: {
+        city: string;
+        [key: string]: any;
+      };
+      [key: string]: any;
+    };
+    script: string[];
+    [key: string]: any;
+}
+
 // Main Discovery Feed Component
 const Feed = () => {
   const [layout, setLayout] = useState('grid');

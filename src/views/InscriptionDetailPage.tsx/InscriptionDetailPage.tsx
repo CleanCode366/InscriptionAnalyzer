@@ -24,6 +24,11 @@ export interface Comment {
     userVote: string[];
 }
 
+interface UserRating {
+  userId: string;
+  rating: number;
+}
+
 interface Post {
     _id: string;
     user_id: string;
@@ -50,6 +55,7 @@ interface Post {
         createdAt: Date;
         updatedAt: Date;
     };
+    userrating?: UserRating[];
     topic: string;
     script: string[];
     type: string;
@@ -114,7 +120,7 @@ useEffect(() => {
       // console.log("Route param postId:", postId);
       // console.log("Available IDs:", allPosts.map((p: Post) => p._id));
       // console.log("Matched Post:", matchedPost);
-
+      console.log(matchedPost);
       setPost(matchedPost);
     } catch (error) {
       console.error('Failed to fetch posts:', error);
@@ -237,7 +243,7 @@ const handleRating = async (newRating: number) => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
             {post.rating && <StarRating rating={post.rating} />}
-            {/* <span className="text-gray-300">({post.})</span> */}
+            <span className="text-gray-300">({post.userrating?.length})</span>
           </div>
           <div className="flex gap-3">
             <button
@@ -277,7 +283,7 @@ const handleRating = async (newRating: number) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                   <div className="flex items-center gap-2 text-gray-400">
                     <Languages className="w-4 h-4" />
-                    <span>Script: {post.script && post.script.join(', ')}</span>
+                    <span>Script: {post.description.scriptLanguage && post.description.scriptLanguage}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-400">
                     <BookOpen className="w-4 h-4" />
@@ -293,12 +299,12 @@ const handleRating = async (newRating: number) => {
                 </div>
 
                 {/* Translation */}
-                {post.description.englishTranslation && (
+                {/* {post.description.englishTranslation && ( */}
                   <div className="mt-4 p-3 bg-gray-700 rounded-lg">
                     <h5 className="text-orange-400 font-medium mb-2">English Translation:</h5>
-                    <p className="text-gray-300 italic">"{post.description.englishTranslation}"</p>
+                    <p className="text-gray-300 italic">"{post.description.englishTranslation || "this is a transation"}"</p>
                   </div>
-                )}
+                {/* )} */}
               </div>
               <div className="ml-4 flex items-center gap-1 text-blue-400">
                 <ThumbsUp className="w-4 h-4 fill-current" />
